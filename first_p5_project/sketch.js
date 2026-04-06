@@ -2,7 +2,7 @@ let bubbles = [];
 
 function setup() {
     createCanvas(innerWidth-18, innerHeight-20);
-    bubbles[0] = new Bubble(width/2, height/2, 300);
+    bubbles[0] = new Bubble(width/2, height/2, 2, 2, 250);
 }
 
 function draw() {
@@ -10,21 +10,30 @@ function draw() {
     for (let i = 0; i < bubbles.length; i++) {
         bubbles[i].show();
         bubbles[i].move();
-        
     }
 }
 
-function mousePressed() {
-    bubbles.push(new Bubble(100, 400, 50));
+function mouseClicked() {
+    for (let i = bubbles.length-1; i >= 0; i--) {
+        let d = dist(mouseX, mouseY, bubbles[i].x, bubbles[i].y)
+        if (d < bubbles[i].r) {
+            bubbles[i].dx = random(1, 5);
+            bubbles[i].dy = random(1,5);
+            bubbles[i].r = bubbles[i].r/1.6
+            bubbles.push(new Bubble(bubbles[i].x, bubbles[i].y, -bubbles[i].dx, -bubbles[i].dy, bubbles[i].r));
+            
+            break;
+        }
+    }
 }
 
 class Bubble {
-    constructor(x, y, r) {
+    constructor(x, y, dx, dy, r) {
         this.x = x;
         this.y = y;
+        this.dx = dx;
+        this.dy = dy;
         this.r = r;
-        this.dx = 1;
-        this.dy = 1;
     }
 
     move() {
