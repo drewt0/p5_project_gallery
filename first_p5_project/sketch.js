@@ -1,31 +1,43 @@
-let bubble;
+let bubbles = [];
 
 function setup() {
     createCanvas(400, 400);
-    bubble = new Bubble();
+    bubbles[0] = new Bubble(50, 50, 20);
 }
 
 function draw() {
     background(0);
-    bubble.move();
-    bubble.show();
+    bubbles[0].move();
+    bubbles[0].show();
 }
 
 class Bubble {
-    constructor() {
-        this.x = 200;
-        this.y = 100;
-        this.size = 40;
+    constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.dx = 1;
+        this.dy = 1;
     }
 
     move() {
-        this.x++;
-        this.y++;
+        this.x += this.dx;
+        this.y += this.dy;
+        if (this.x > width - this.r/2) {
+            this.dx = -this.dx;
+        } else if (this.x < 0 + this.r/2) {
+            this.dx = -this.dx;
+        }
+        if (this.y > height - this.r/2) {
+            this.dy = -this.dy;
+        } else if (this.y < 0 + this.r/2) {
+            this.dy = -this.dy;
+        }
     }
 
     show() {
         noStroke();
         fill(0, 255, 255);
-        ellipse(this.x, this.y, this.size)
+        ellipse(this.x, this.y, this.r);
     }
 }
