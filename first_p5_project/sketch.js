@@ -1,14 +1,21 @@
 let bubbles = [];
 
 function setup() {
-    createCanvas(400, 400);
-    bubbles[0] = new Bubble(50, 50, 20);
+    createCanvas(innerWidth-18, innerHeight-20);
+    bubbles[0] = new Bubble(width/2, height/2, 300);
 }
 
 function draw() {
-    background(0);
-    bubbles[0].move();
-    bubbles[0].show();
+    background(255);
+    for (let i = 0; i < bubbles.length; i++) {
+        bubbles[i].show();
+        bubbles[i].move();
+        
+    }
+}
+
+function mousePressed() {
+    bubbles.push(new Bubble(100, 400, 50));
 }
 
 class Bubble {
@@ -33,11 +40,13 @@ class Bubble {
         } else if (this.y < 0 + this.r/2) {
             this.dy = -this.dy;
         }
+            
     }
 
     show() {
-        noStroke();
-        fill(0, 255, 255);
+        stroke(51, 67, 202);
+        strokeWeight(2);
+        fill(51, 183, 202);
         ellipse(this.x, this.y, this.r);
     }
 }
