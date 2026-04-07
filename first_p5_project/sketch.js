@@ -8,6 +8,11 @@ function setup() {
 function draw() {
     background(255);
     for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].bubbleHover()) {
+            bubbles[i].a = 100;
+        } else {
+            bubbles[i].a = 200;
+        }
         bubbles[i].show();
         bubbles[i].move();
     }
@@ -15,8 +20,7 @@ function draw() {
 
 function mouseClicked() {
     for (let i = bubbles.length-1; i >= 0; i--) {
-        let d = dist(mouseX, mouseY, bubbles[i].x, bubbles[i].y)
-        if (d < bubbles[i].r) {
+        if (bubbles[i].bubbleHover()) {
             bubbles[i].dx = random(1, 5);
             bubbles[i].dy = random(1,5);
             bubbles[i].r = bubbles[i].r/1.6
@@ -34,6 +38,16 @@ class Bubble {
         this.dx = dx;
         this.dy = dy;
         this.r = r;
+        this.a = 200;
+    }
+
+    bubbleHover() {
+        let d = dist(mouseX, mouseY, this.x, this.y)
+        if (d < this.r/2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     move() {
@@ -55,7 +69,7 @@ class Bubble {
     show() {
         stroke(51, 67, 202);
         strokeWeight(2);
-        fill(51, 183, 202);
+        fill(51, 183, 202, this.a);
         ellipse(this.x, this.y, this.r);
     }
 }
