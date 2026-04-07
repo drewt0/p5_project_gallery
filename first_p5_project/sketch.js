@@ -7,14 +7,21 @@ function setup() {
 
 function draw() {
     background(255);
-    for (let i = 0; i < bubbles.length; i++) {
-        if (bubbles[i].bubbleHover()) {
-            bubbles[i].a = 100;
+
+    for (let bubble of bubbles) {
+        bubble.move();
+
+        if (bubble.bubbleHover()) {
+            bubble.a = 100;
         } else {
-            bubbles[i].a = 200;
+            bubble.a = 200;
         }
-        bubbles[i].show();
-        bubbles[i].move();
+
+        for (let other of bubbles) {
+            bubble.bubbleCollision(other);
+        }
+
+        bubble.show();
     }
 }
 
@@ -24,9 +31,7 @@ function mouseClicked() {
             bubbles[i].dx = random(1, 5);
             bubbles[i].dy = random(1,5);
             bubbles[i].r = bubbles[i].r/1.6
-            bubbles.push(new Bubble(bubbles[i].x, bubbles[i].y, -bubbles[i].dx, -bubbles[i].dy, bubbles[i].r));
-            
-            break;
+            bubbles.push(new Bubble(bubbles[i].x + bubbles[i].r/2*bubbles[i].dxMult, bubbles[i].y + bubbles[i].r/2*bubbles[i].dyMult, bubbles[i].dx * -bubbles[i].dxMult, bubbles[i].dy * -bubbles[i].dyMult, bubbles[i].r));
         }
     }
 }
@@ -39,6 +44,8 @@ class Bubble {
         this.dy = dy;
         this.r = r;
         this.a = 200;
+        this.dxMult = 1;
+        this.dyMult = 1;
     }
 
     bubbleHover() {
@@ -50,18 +57,39 @@ class Bubble {
         }
     }
 
+    bubbleCollision(other) {
+        let d = dist(this.x, this.y, other.x, other.y);
+        if (d < (this.r + other.r)/2) {
+            this.dxMult *= -1;
+            this.dyMult *= -1;
+            other.dxMult *= -1;
+            other.dyMult *= -1;
+
+            let angle = atan2(other.y - this.y, other.x - this.x);
+            this.x -= cos(angle) * 2;
+            this.y -= sin(angle) * 2;
+            other.x += cos(angle) * 2;
+            other.y += sin(angle) * 2;
+        }
+    }
+
     move() {
-        this.x += this.dx;
-        this.y += this.dy;
+        this.x += this.dx*this.dxMult;
+        this.y += this.dy*this.dyMult;
+
         if (this.x > width - this.r/2) {
-            this.dx = -this.dx;
+            this.dxMult = -1;
+            this.x = width - this.r/2;
         } else if (this.x < 0 + this.r/2) {
-            this.dx = -this.dx;
+            this.dxMult = 1;
+            this.x = this.r/2
         }
         if (this.y > height - this.r/2) {
-            this.dy = -this.dy;
+            this.dyMult = -1;
+            this.y = height - this.r/2;
         } else if (this.y < 0 + this.r/2) {
-            this.dy = -this.dy;
+            this.dyMult = 1;
+            this.y = this.r/2
         }
             
     }
