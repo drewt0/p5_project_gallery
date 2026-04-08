@@ -1,26 +1,23 @@
 let pos;
-let incx, incy;
+let vel;
 
 function setup() {
     createCanvas(innerWidth, innerHeight);
 
-    incx = 1;
-    incy = 2;
-
     pos = createVector(width/2, height/2);
+    vel = createVector(1, 1);
     background(0);
 }
 
 function draw() {
-    // background(0);
+    background(0);
+    noStroke();
+    fill(255); 
 
-    stroke(255);
-    strokeWeight(2);
-    point(pos.x, pos.y);
+    ellipse(pos.x, pos.y, 20);
 
-    pos.x += map(noise(incx), 0, 1, -1, 1);
-    pos.y += map(noise(incy), 0, 1, -1, 1);
+    pos.add(vel);
 
-    incx += 0.01;
-    incy += 0.01;
+    vel.x = random(-4, 4);
+    vel.y = random(-4, 4);
 }
