@@ -1,23 +1,42 @@
+let mouse;
 let pos;
-let vel;
+let fireworks = [];
 
 function setup() {
     createCanvas(innerWidth, innerHeight);
-
-    pos = createVector(width/2, height/2);
-    vel = createVector(1, 1);
-    background(0);
 }
 
 function draw() {
     background(0);
-    noStroke();
-    fill(255); 
 
-    ellipse(pos.x, pos.y, 20);
+    for (let f of fireworks) {
+        f.show();
+    }
 
-    pos.add(vel);
+    mouse = createVector(mouseX, mouseY)
+}
 
-    vel.x = random(-4, 4);
-    vel.y = random(-4, 4);
+function mouseClicked() {
+    fireworks.push(new Firework(mouse.x, mouse.y));
+}
+
+class Firework {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+
+        for (let i = 0; i < 100; i++) {
+            this.particles.push(p5.Vector.random2D());
+            this.particles[i].mult(random(30, 90));
+        }
+    }
+
+
+    show() {
+        stroke(255);
+        for (let p of this.particles) {
+            line(this.x, this.y, this.x + p.x, this.y + p.y);
+        }
+    }
 }
