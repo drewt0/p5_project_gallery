@@ -1,4 +1,5 @@
 let mouse;
+let move;
 let pos;
 let fireworks = [];
 
@@ -25,6 +26,8 @@ class Firework {
         this.x = x;
         this.y = y;
         this.particles = [];
+        this.a = 100;
+        move = createVector(1, 1);
 
         for (let i = 0; i < 100; i++) {
             this.particles.push(p5.Vector.random2D());
@@ -34,9 +37,11 @@ class Firework {
 
 
     show() {
-        stroke(255);
-        for (let p of this.particles) {
+        stroke(255, 255, 255, this.a);
+        for (let p of this.particles) { 
             line(this.x, this.y, this.x + p.x, this.y + p.y);
+            p.sub(move);
         }
+        this.a--;
     }
 }
