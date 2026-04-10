@@ -9,7 +9,7 @@ function setup() {
 function draw() {
     background(0);
 
-    for (let i = fireworks.length; i >= 0; i--) {
+    for (let i = fireworks.length - 1; i >= 0; i--) {
         let f = fireworks[i];
 
         if (!f) continue;
@@ -20,7 +20,7 @@ function draw() {
         }
     }
 
-    mouse = createVector(mouseX, mouseY)
+    mouse = createVector(mouseX, mouseY);
 }
 
 function mouseClicked() {
@@ -29,38 +29,44 @@ function mouseClicked() {
 
 class Firework {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.pos = createVector(x, y);
         this.particles = [];
-        this.alpha = [];
-        this.timer = 0;
 
-        for (let i = 0; i < 100; i++) {
-            this.particles.push(p5.Vector.random2D());
-            this.particles[i].mult(random(30, 90));
-
-            this.alpha.push(random(90, 200));
+        for (let i = 0; i < 500; i++) {
+            this.particles.push({
+                pos: createVector(x, y),
+                vel: p5.Vector.random2D().mult(random(3, 8)),
+                acc: createVector(0, 0),
+                alpha: random(200, 300)
+            });
         }
     }
 
-
     show() {
-        for (let i = this.particles.length; i >= 0; i--) {
+        let mouseVec = createVector(mouseX, mouseY);
+
+        for (let i = this.particles.length - 1; i >= 0; i--) {
             let p = this.particles[i];
-            let a = this.alpha[i];
 
-            if (!p) continue;
+            let steer = p5.Vector.sub(mouseVec, p.pos);
+            steer.setMag(0.5);
+            p.acc.add(steer);
 
-            this.alpha[i] -= 2;
-            if (a < 1) {
+            p.vel.add(p.acc);
+            p.vel.limit(10);
+            p.pos.add(p.vel);
+            p.acc.mult(0);
+
+            p.alpha -= 0.5;
+
+            if (p.alpha < 1) {
                 this.particles.splice(i, 1);
-                this.alpha.splice(i, 1);
                 continue;
             }
 
-            stroke(255, 255, 255, a);
-            line(this.x, this.y, this.x + p.x, this.y + p.y);
-            p.mult(1.02);
+            stroke(255, 255, 255, p.alpha);
+            strokeWeight(2);
+            point(p.pos.x, p.pos.y);
         }
     }
 }
