@@ -15,27 +15,38 @@ function setup() {
 function draw() {
 	background(220);
 
+	if (mouseIsPressed) {
+		x = mouseX;
+		y = mouseY;
+		xSpeed = mouseX - pmouseX;
+		ySpeed = mouseY - pmouseY;
+	} else {
+		ySpeed += gravity;
+		x += xSpeed;
+		y += ySpeed;
+		xSpeed *= friction;
+
+		if (y + radius > height) {
+			y = height - radius;
+			ySpeed *= -0.8;
+			xSpeed *= 0.98;
+		}
+
+		if (x + radius > width || x - radius < 0) {
+			xSpeed *= -1;
+		}
+
+		if (y - radius < 0) {
+			ySpeed *= -1;
+		}
+	}
+
 	fill(50, 150, 255);
 	noStroke();
 	ellipse(x, y, radius * 2);
+}
 
-	ySpeed += gravity;
-	x += xSpeed;
-	y += ySpeed;
-
-	xSpeed *= friction;
-
-	if (y + radius > height) {
-		y = height - radius;
-		ySpeed *= -0.8;
-		xSpeed *= 0.98;
-	}
-
-	if (x + radius > width || x - radius < 0) {
-		xSpeed *= -1;
-	}
-
-	if (y - radius < 0) {
-		ySpeed *= -1;
-	}
+function mousePressed() {
+	xSpeed = 0;
+	ySpeed = 0;
 }
