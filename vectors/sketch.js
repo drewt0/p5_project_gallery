@@ -35,7 +35,7 @@ class Firework {
         for (let i = 0; i < 1000; i++) {
             this.particles.push({
                 pos: createVector(x, y),
-                vel: p5.Vector.random2D().mult(random(3, 30)),
+                vel: p5.Vector.random2D().mult(random(3, 10)),
                 acc: createVector(0, 0),
                 alpha: random(200, 300)
             });
@@ -53,7 +53,7 @@ class Firework {
             p.acc.add(steer);
 
             p.vel.add(p.acc);
-            p.vel.limit(60);
+            p.vel.limit(30);
             p.pos.add(p.vel);
             p.acc.mult(0);
 
