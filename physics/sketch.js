@@ -3,9 +3,10 @@ let xSpeed, ySpeed;
 let gravity = 0.6;
 let friction = 0.997;
 let radius = 25;
+let isDragging = false;
 
 function setup() {
-	createCanvas(600, 400);
+	createCanvas(windowWidth, windowHeight);
 	x = width / 2;
 	y = height / 2;
 	xSpeed = 5;
@@ -15,7 +16,7 @@ function setup() {
 function draw() {
 	background(220);
 
-	if (mouseIsPressed) {
+	if (isDragging) {
 		x = mouseX;
 		y = mouseY;
 		xSpeed = mouseX - pmouseX;
@@ -33,10 +34,13 @@ function draw() {
 		}
 
 		if (x + radius > width || x - radius < 0) {
+			if (x + radius > width) x = width - radius;
+			if (x - radius < 0) x = radius;
 			xSpeed *= -1;
 		}
 
 		if (y - radius < 0) {
+			y = radius;
 			ySpeed *= -1;
 		}
 	}
@@ -47,6 +51,18 @@ function draw() {
 }
 
 function mousePressed() {
-	xSpeed = 0;
-	ySpeed = 0;
+	let d = dist(mouseX, mouseY, x, y);
+	if (d < radius) {
+		isDragging = true;
+		xSpeed = 0;
+		ySpeed = 0;
+	}
+}
+
+function mouseReleased() {
+	isDragging = false;
+}
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
 }
