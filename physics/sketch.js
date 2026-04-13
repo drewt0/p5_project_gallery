@@ -1,6 +1,7 @@
 let x, y;
 let xSpeed, ySpeed;
 let gravity = 0.6;
+let friction = 0.997;
 let radius = 25;
 
 function setup() {
@@ -22,9 +23,12 @@ function draw() {
 	x += xSpeed;
 	y += ySpeed;
 
+	xSpeed *= friction;
+
 	if (y + radius > height) {
 		y = height - radius;
 		ySpeed *= -0.8;
+		xSpeed *= 0.98;
 	}
 
 	if (x + radius > width || x - radius < 0) {
