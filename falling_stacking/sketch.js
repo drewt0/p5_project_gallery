@@ -24,11 +24,9 @@ function setup() {
             grid[i][j] = 0;
         }
     }
-
-    grid[20][10] = 1;
 }
 
-function mousePressed() {
+function mouseDragged() {
     let col = floor(mouseX / w);
     let row = floor(mouseY / w);
     grid[col][row] = 1;
@@ -40,7 +38,11 @@ function draw() {
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             stroke(255);
-            fill(grid[i][j] * 255);
+            if (grid[i][j] === 0) {
+                fill(0)
+            } else {
+                fill(random(1, 255), random(1, 255), random(1, 255))
+            }
             let x = i * w;
             let y = j * w;
             square(x, y, w);
@@ -53,8 +55,23 @@ function draw() {
             let state = grid[i][j];
             if (state === 1) {
                 let below = grid[i][j + 1];
-                if (below === 0 && j < rows - 1) {
+
+                let dir = random([-1, 1]);
+
+                let belowA, belowB;
+
+                if (i > 0 && i < cols-1) {
+                    belowA = grid[i + dir][j + 1];
+                    belowB = grid[i - dir][j + 1];
+                }
+                
+
+                if (below === 0) {
                     nextGrid[i][j + 1] = 1;
+                } else if (belowA === 0) {
+                    nextGrid[i + dir][j + 1] = 1;
+                } else if (belowB === 0) {
+                    nextGrid[i - dir][j + 1] = 1;
                 } else {
                     nextGrid[i][j] = 1;
                 }
