@@ -10,11 +10,14 @@ function make2DArray(cols, rows) {
 }
 
 let grid;
-let w = 5;
+let w = 2.5;
 let cols, rows;
+
+let huev = 200;
 
 function setup() {
     createCanvas(500, 500);
+    colorMode(HSB, 360, 255, 255)
     cols = width / w;
     rows = height / w;
     grid = make2DArray(cols, rows);
@@ -34,12 +37,18 @@ function mouseDragged() {
     let ext = floor(matrix/2);
     for (let i = -ext; i <= ext; i++) {
         for (let j = -ext; j <= ext; j++) {
-            let col = mouseCol + i;
-            let row = mouseRow + j;
-            if (col >= 0 && col <= cols - 1 && row >= 0 && row < rows - 1) {
-                grid[col][row] = 1;
+                if (random(1) < 0.75) {
+                let col = mouseCol + i;
+                let row = mouseRow + j;
+                if (col >= 0 && col <= cols - 1 && row >= 0 && row < rows - 1) {
+                    grid[col][row] = huev;
+                }
             }
         }
+    }
+    huev += 1;
+    if (huev > 360) {
+        huev = 1;
     }
 }
 
@@ -49,8 +58,8 @@ function draw() {
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             noStroke();
-            if (grid[i][j] === 1) {
-                fill(255);
+            if (grid[i][j] > 0) {
+                fill(grid[i][j], 255, 255);
                 let x = i * w;
                 let y = j * w;
                 square(x, y, w);
@@ -62,7 +71,7 @@ function draw() {
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let state = grid[i][j];
-            if (state === 1) {
+            if (state > 0) {
                 let below = grid[i][j + 1];
 
                 let dir = random([-1, 1]);
@@ -76,13 +85,13 @@ function draw() {
                 
 
                 if (below === 0) {
-                    nextGrid[i][j + 1] = 1;
+                    nextGrid[i][j + 1] = grid[i][j];
                 } else if (belowA === 0) {
-                    nextGrid[i + dir][j + 1] = 1;
+                    nextGrid[i + dir][j + 1] = grid[i][j];
                 } else if (belowB === 0) {
-                    nextGrid[i - dir][j + 1] = 1;
+                    nextGrid[i - dir][j + 1] = grid[i][j];
                 } else {
-                    nextGrid[i][j] = 1;
+                    nextGrid[i][j] = grid[i][j];
                 }
             }
         }
